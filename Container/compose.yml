@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    hostname: postgres
+    user: root
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_INIT_DB_ARGS: --encoding=UTF8 --locale=ja_JP.UTF-8
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./storage:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    container_name: pgadmin4
+    ports:
+      - "8000:80"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@example.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    hostname: pgadmin4
+    depends_on:
+      - postgres
+volumes:
+  storage:
+    external: true
+  pgadmin:
+    external: true
